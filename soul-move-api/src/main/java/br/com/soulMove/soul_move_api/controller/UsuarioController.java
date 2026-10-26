@@ -96,9 +96,14 @@ public class UsuarioController {
     }
 
     @PutMapping("/{id}")
-    @Operation(summary = "Editar perfil", description = "Altera nome e foto. E-mail e pontos não são editáveis.")
+    @Operation(
+            summary = "Editar perfil",
+            description = "Altera nome, e-mail, foto e opcionalmente a senha do usuário."
+    )
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Perfil atualizado"),
+            @ApiResponse(responseCode = "200", description = "Perfil atualizado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Dados de requisição inválidos"),
+            @ApiResponse(responseCode = "409", description = "E-mail já cadastrado no sistema"),
             @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
     })
     public ResponseEntity<UsuarioResponseDTO> atualizar(@PathVariable Long id,

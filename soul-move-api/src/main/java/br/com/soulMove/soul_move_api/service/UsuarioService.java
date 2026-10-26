@@ -86,8 +86,33 @@ public class UsuarioService {
     @Transactional
     public Usuario atualizarPerfil(Long id, UsuarioUpdateRequestDTO dto) {
         Usuario usuario = buscarPorId(id);
+
+        // Normaliza o e-mail (minúsculo e sem espaços)
+        String emailNormalizado = dto.email().trim().toLowerCase();
+
+        // Se o e-mail foi alterado, verifica se já existe outro usuário com o mesmo e-mail
+        if (!usuario.getEmail().equalsIgnoreCase(emailNormalizado)) {
+            boolean emailExiste = usuarioRepository.findByEmail(emailNormalizado).isPresent();
+            if (emailExiste) {
+                throw new RegraNegocioException("O e-mail informado já está em uso por outra conta.");
+            }
+            usuario.setEmail(emailNormalizado);
+        }
+
+        // Atualiza nome
         usuario.setNome(dto.nome().trim());
-        usuario.setFotoUsuario(dto.fotoUsuario() == null || dto.fotoUsuario().isBlank() ? null : dto.fotoUsuario().trim());
+
+        // Atualiza foto do perfil (se informada)
+        usuario.setFotoUsuario(
+                dto.fotoUsuario() == null || dto.fotoUsuario().isBlank() ? null : dto.fotoUsuario().trim()
+        );
+
+        // Atualiza senha apenas se foi preenchida
+        if (dto.senha() != null && !dto.senha().isBlank()) {
+            // Se usar PasswordEncoder: usuario.setSenha(passwordEncoder.encode(dto.senha().trim()));
+            usuario.setSenha(dto.senha().trim());
+        }
+
         return usuarioRepository.save(usuario);
     }
 
