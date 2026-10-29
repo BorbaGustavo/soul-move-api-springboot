@@ -38,7 +38,8 @@ public class Usuario {
     @Column(name = "senha", nullable = false, length = 255)
     private String senha;
 
-    @Column(name = "foto_usuario", length = 500)
+    @Lob
+    @Column(name = "foto_usuario")
     private String fotoUsuario;
 
     @Column(name = "pt_usuario", nullable = false)
