@@ -1,6 +1,7 @@
 package br.com.soulMove.soul_move_api.controller;
 
 import br.com.soulMove.soul_move_api.dto.RankingResponseDTO;
+import br.com.soulMove.soul_move_api.model.Ranking;
 import br.com.soulMove.soul_move_api.service.RankingService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -21,7 +22,7 @@ public class RankingController {
     private RankingService rankingService;
 
     @GetMapping
-    @Operation(summary = "Obter ranking geral", description = "Classificação ordenada por pontuação. Use ?limite=10 para o Top 10.")
+    @Operation(summary = "Obter ranking geral", description = "Classificação ordenada por pontuação. Use ?limite=10 para restringir.")
     @ApiResponse(responseCode = "200", description = "Ranking retornado com sucesso")
     public ResponseEntity<List<RankingResponseDTO>> obterRankingGeral(@RequestParam(required = false) Integer limite) {
         var stream = rankingService.obterRankingCompleto().stream();
@@ -38,6 +39,7 @@ public class RankingController {
             @ApiResponse(responseCode = "404", description = "Usuário sem ranking")
     })
     public ResponseEntity<RankingResponseDTO> obterPorUsuario(@PathVariable Long usuarioId) {
-        return ResponseEntity.ok(new RankingResponseDTO(rankingService.buscarPorUsuarioOuFalhar(usuarioId)));
+        Ranking ranking = rankingService.buscarPorUsuarioOuFalhar(usuarioId);
+        return ResponseEntity.ok(new RankingResponseDTO(ranking));
     }
 }

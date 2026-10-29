@@ -7,7 +7,8 @@ public record RankingResponseDTO(
         Integer posicao,
         Integer pontuacaoTotal,
         Long usuarioId,
-        String nomeUsuario
+        String nomeUsuario,
+        String fotoUsuario
 ) {
     public RankingResponseDTO(Ranking ranking) {
         this(
@@ -15,7 +16,8 @@ public record RankingResponseDTO(
                 ranking.getPosicao(),
                 ranking.getPontuacaoTotal(),
                 ranking.getUsuario() != null ? ranking.getUsuario().getId() : null,
-                ranking.getUsuario() != null ? ranking.getUsuario().getNome() : null
+                ranking.getUsuario() != null ? ranking.getUsuario().getNome() : null,
+                ranking.getUsuario() != null ? ranking.getUsuario().getFotoUsuario():null
         );
     }
 }
