@@ -1,5 +1,6 @@
 package br.com.soulMove.soul_move_api.controller;
 
+import br.com.soulMove.soul_move_api.dto.RecompensaRequestDTO;
 import br.com.soulMove.soul_move_api.dto.ResgateRecompensaRequestDTO;
 import br.com.soulMove.soul_move_api.dto.UsuarioRecompensaResponseDTO;
 import br.com.soulMove.soul_move_api.model.Recompensa;
@@ -53,6 +54,17 @@ public class RecompensaController {
             @RequestBody @Valid ResgateRecompensaRequestDTO dto) {
         UsuarioRecompensa resgate = recompensaService.resgatarRecompensa(dto.usuarioId(), dto.recompensaId());
         return ResponseEntity.status(HttpStatus.CREATED).body(new UsuarioRecompensaResponseDTO(resgate));
+    }
+
+    @PostMapping
+    @Operation(summary = "Criar nova recompensa", description = "Adiciona uma nova recompensa ao catálogo de prêmios.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Recompensa criada com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos")
+    })
+    public ResponseEntity<Recompensa> criarRecompensa(@RequestBody @Valid RecompensaRequestDTO dto) {
+        Recompensa novaRecompensa = recompensaService.criarRecompensa(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(novaRecompensa);
     }
 
     @GetMapping("/historico/{usuarioId}")

@@ -1,5 +1,6 @@
 package br.com.soulMove.soul_move_api.service;
 
+import br.com.soulMove.soul_move_api.dto.RecompensaRequestDTO;
 import br.com.soulMove.soul_move_api.exception.RecursoNaoEncontradoException;
 import br.com.soulMove.soul_move_api.exception.RegraNegocioException;
 import br.com.soulMove.soul_move_api.model.Recompensa;
@@ -66,5 +67,15 @@ public class RecompensaService {
             throw new RecursoNaoEncontradoException("Usuário não encontrado com o ID: " + usuarioId);
         }
         return usuarioRecompensaRepository.findByUsuarioIdOrderByDataRecebimentoDescIdDesc(usuarioId);
+    }
+
+    @Transactional
+    public Recompensa criarRecompensa(RecompensaRequestDTO dto) {
+        // Se a sua entidade Recompensa tiver um construtor que aceita esses parâmetros, ajuste conforme necessário
+        Recompensa recompensa = new Recompensa();
+        recompensa.setDescricao(dto.descricao());
+        recompensa.setValor(dto.valor());
+
+        return recompensaRepository.save(recompensa);
     }
 }
